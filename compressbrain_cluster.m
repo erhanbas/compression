@@ -19,6 +19,9 @@ function compressbrain_cluster(comp, tiffile, videofolder,outname,delete_file)
 % $Author: base $	$Date: 2016/01/21 09:28:24 $	$Revision: 0.1 $
 % Copyright: HHMI 2016
 %%
+if nargin<2
+    deployment()
+end
 unix('umask 0022')
 comp = str2num(comp);
 delete_file = str2num(delete_file);
@@ -77,7 +80,7 @@ function deployment
 %%
 % mcc -m -R -nojvm -v compressbrain_cluster.m -d /groups/mousebrainmicro/home/base/CODE/MATLAB/recontree/compiled/compiledfiles_conversion/ -o compressbrain_cluster
 %%
-clear all
+% clear all
 % read from a folder
 opt.myshfile = '2015-02-27.sh'
 opt.myshfile = '2015-09-01.sh'
@@ -86,10 +89,14 @@ opt.myshfile = '2015-07-11.sh'
 opt.myshfile = '2016-07-18.sh'
 opt.myshfile = '2016-04-04_rem.sh'
 opt.myshfile = '2016-09-25_r1-1000.sh'
+opt.myshfile = '2016-10-25.sh'
+opt.myshfile = '2016-10-31.sh'
+
 brain = opt.myshfile(1:10);
 opt.inputfolder = sprintf('/groups/mousebrainmicro/mousebrainmicro/from_tier2/data/%s/Tiling',brain)
-opt.seqtemp = fullfile(opt.inputfolder,sprintf('filelist_range1-1413.txt'))
+opt.seqtemp = fullfile(opt.inputfolder,sprintf('filelist.txt'))
 unix(sprintf('rm %s',opt.seqtemp))
+clear args
 args.level = 3;
 args.ext = 'tif';
 if exist(opt.seqtemp, 'file') == 2
@@ -168,8 +175,8 @@ else
         [videofolder,outname] = fileparts(tiffile);
         randString = s( ceil(rand(1,sLength)*numRands) );
         name = sprintf('c-%05d-%s',idx,randString);
-        args = sprintf('''/groups/mousebrainmicro/home/base/CODE/MATLAB/recontree/compiled/compiledfiles_conversion/compressbrain_cluster %d %s %s %s %d> output.log''',comp,tiffile,videofolder,outname,delete_file);
-        mysub = sprintf('qsub -pe batch %d -l d_rt=%d -N %s -j y -o ~/logs -b y -cwd -V %s\n',numcores,howlong,name,args);
+        args = sprintf('''/groups/mousebrainmicro/home/base/CODE/MATLAB/recontree/compiled/compiledfiles_conversion/compressbrain_cluster %d %s %s %s %d''',comp,tiffile,videofolder,outname,delete_file);
+        mysub = sprintf('qsub -pe batch %d -l d_rt=%d -N %s -j y -o /dev/null -b y -cwd -V %s\n',numcores,howlong,name,args);
         fwrite(fid,mysub);
     end
     unix(sprintf('chmod +x %s',myshfile));

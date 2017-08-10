@@ -21,6 +21,7 @@ function compressbrain_cluster(comp, tiffile, videofolder,outname,delete_file)
 %%
 if nargin<2
     deployment()
+    return
 end
 unix('umask 0022')
 comp = str2num(comp);
@@ -75,13 +76,16 @@ end
 end
 
 %%
-function deployment
+function deployment(myshfile,myfilefolder)
 %% (comp, tiffile, videofolder, outfolder,outname)
 %%
 % mcc -m -R -nojvm -v compressbrain_cluster.m -d /groups/mousebrainmicro/home/base/CODE/MATLAB/recontree/compiled/compiledfiles_conversion/ -o compressbrain_cluster
 %%
 % clear all
 % read from a folder
+% myshfile
+myfilefolder = '/groups/mousebrainmicro/mousebrainmicro/data/'
+% /groups/mousebrainmicro/mousebrainmicro/from_tier2/data/
 opt.myshfile = '2015-02-27.sh'
 opt.myshfile = '2015-09-01.sh'
 opt.myshfile = '2014-11-24.sh'
@@ -91,9 +95,25 @@ opt.myshfile = '2016-04-04_rem.sh'
 opt.myshfile = '2016-09-25_r1-1000.sh'
 opt.myshfile = '2016-10-25.sh'
 opt.myshfile = '2016-10-31.sh'
+opt.myshfile = '2016-10-31.sh'
+opt.myshfile = '2016-12-05.sh'
+opt.myshfile = '2017-02-13.sh'
+
+opt.myshfile = '2017-01-15.sh'
+opt.myshfile = '2017-02-22.sh'
+opt.myshfile = '2017-04-19.sh'
+% opt.myshfile = '2017-03-20.sh'
+
 
 brain = opt.myshfile(1:10);
-opt.inputfolder = sprintf('/groups/mousebrainmicro/mousebrainmicro/from_tier2/data/%s/Tiling',brain)
+% check Tiling folder exists
+opt.inputfolder = fullfile(myfilefolder,sprintf('%s/Tiling',brain))
+if exist(opt.inputfolder,'dir')
+    
+else
+    opt.inputfolder = fullfile(myfilefolder,sprintf('%s/',brain))
+end
+    
 opt.seqtemp = fullfile(opt.inputfolder,sprintf('filelist.txt'))
 unix(sprintf('rm %s',opt.seqtemp))
 clear args
@@ -176,7 +196,8 @@ else
         randString = s( ceil(rand(1,sLength)*numRands) );
         name = sprintf('c-%05d-%s',idx,randString);
         args = sprintf('''/groups/mousebrainmicro/home/base/CODE/MATLAB/recontree/compiled/compiledfiles_conversion/compressbrain_cluster %d %s %s %s %d''',comp,tiffile,videofolder,outname,delete_file);
-        mysub = sprintf('qsub -pe batch %d -l d_rt=%d -N %s -j y -o /dev/null -b y -cwd -V %s\n',numcores,howlong,name,args);
+%         mysub = sprintf('qsub -pe batch %d -l d_rt=%d -N %s -j y -o /dev/null -b y -cwd -V %s\n',numcores,howlong,name,args);
+        mysub = sprintf('bsub -n%d -We %d -J %s -o /dev/null %s\n',numcores,howlong/60,name,args);
         fwrite(fid,mysub);
     end
     unix(sprintf('chmod +x %s',myshfile));

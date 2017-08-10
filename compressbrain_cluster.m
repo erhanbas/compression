@@ -15,6 +15,7 @@ function compressbrain_cluster(comp, tiffile, videofolder,outname,delete_file)
 %   compressbrain_cluster('5', './data/I2.tif', './test','myvideo','0')
 %
 % See also: runconv.m
+% 08/10/17: moved to github
 
 % $Author: base $	$Date: 2016/01/21 09:28:24 $	$Revision: 0.1 $
 % Copyright: HHMI 2016

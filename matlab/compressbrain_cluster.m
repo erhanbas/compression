@@ -80,13 +80,13 @@ end
 function deployment(myshfile,myfilefolder)
 %% (comp, tiffile, videofolder, outfolder,outname)
 %%
-% mcc -m -R -nojvm -v compressbrain_cluster.m -d /groups/mousebrainmicro/home/base/CODE/MATLAB/recontree/compiled/compiledfiles_conversion/ -o compressbrain_cluster
+% mcc -m -R -nojvm -v compressbrain_cluster.m -d /groups/mousebrainmicro/home/base/CODE/MATLAB/recontree/compiled/compiledfiles_conversion2/ -o compressbrain_cluster
 %%
 % clear all
 % read from a folder
 % myshfile
 myfilefolder = '/groups/mousebrainmicro/mousebrainmicro/data/'
-% /groups/mousebrainmicro/mousebrainmicro/from_tier2/data/
+myfilefolder = '/groups/mousebrainmicro/mousebrainmicro/from_tier2/data/'
 opt.myshfile = '2015-02-27.sh'
 opt.myshfile = '2015-09-01.sh'
 opt.myshfile = '2014-11-24.sh'
@@ -103,7 +103,9 @@ opt.myshfile = '2017-02-13.sh'
 opt.myshfile = '2017-01-15.sh'
 opt.myshfile = '2017-02-22.sh'
 opt.myshfile = '2017-04-19.sh'
-% opt.myshfile = '2017-03-20.sh'
+opt.myshfile = '2016-03-21.sh'
+opt.myshfile = '2016-03-21.sh'
+opt.myshfile = '2016-09-12.sh'
 
 
 brain = opt.myshfile(1:10);
@@ -167,7 +169,7 @@ if 0 % use array tasks
             [videofolder,outname] = fileparts(tiffile);
             randString = s( ceil(rand(1,sLength)*numRands) );
             name = sprintf('c-%05d-%s',idx,randString);
-            args = sprintf('''/groups/mousebrainmicro/home/base/CODE/MATLAB/recontree/compiled/compiledfiles_conversion/compressbrain_cluster %d %s %s %s %d> output.log''',comp,tiffile,videofolder,outname,delete_file);
+            args = sprintf('''/groups/mousebrainmicro/home/base/CODE/MATLAB/recontree/compiled/compiledfiles_conversion2/compressbrain_cluster %d %s %s %s %d> output.log''',comp,tiffile,videofolder,outname,delete_file);
             mysub = sprintf('qsub -pe batch %d -l d_rt=%d -N %s -j y -o /dev/null -b y -cwd -V %s\n',numcores,howlong,name,args);
             fwrite(fid,mysub);
         end

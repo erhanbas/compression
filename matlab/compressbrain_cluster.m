@@ -21,7 +21,8 @@ function compressbrain_cluster(comp, tiffile, videofolder,outname,delete_file)
 % Copyright: HHMI 2016
 %%
 if nargin<2
-    deployment()
+    myshfile = '2017-09-25.sh'
+    deployment(myshfile)
     return
 end
 unix('umask 0022')
@@ -85,36 +86,38 @@ function deployment(myshfile,myfilefolder)
 % clear all
 % read from a folder
 % myshfile
-myfilefolder = '/groups/mousebrainmicro/mousebrainmicro/data/'
-myfilefolder = '/groups/mousebrainmicro/mousebrainmicro/from_tier2/data/'
-opt.myshfile = '2015-02-27.sh'
-opt.myshfile = '2015-09-01.sh'
-opt.myshfile = '2014-11-24.sh'
-opt.myshfile = '2015-07-11.sh'
-opt.myshfile = '2016-07-18.sh'
-opt.myshfile = '2016-04-04_rem.sh'
-opt.myshfile = '2016-09-25_r1-1000.sh'
-opt.myshfile = '2016-10-25.sh'
-opt.myshfile = '2016-10-31.sh'
-opt.myshfile = '2016-10-31.sh'
-opt.myshfile = '2016-12-05.sh'
-opt.myshfile = '2017-02-13.sh'
+if nargin<2
+    myfilefolder = '/groups/mousebrainmicro/mousebrainmicro/data/';
+end
+opt.myshfile = myshfile;
 
-opt.myshfile = '2017-01-15.sh'
-opt.myshfile = '2017-02-22.sh'
-opt.myshfile = '2017-04-19.sh'
-opt.myshfile = '2016-03-21.sh'
-opt.myshfile = '2016-03-21.sh'
-opt.myshfile = '2016-09-12.sh'
-
+% myfilefolder = '/groups/mousebrainmicro/mousebrainmicro/from_tier2/data/'
+% opt.myshfile = '2015-02-27.sh'
+% opt.myshfile = '2015-09-01.sh'
+% opt.myshfile = '2014-11-24.sh'
+% opt.myshfile = '2015-07-11.sh'
+% opt.myshfile = '2016-07-18.sh'
+% opt.myshfile = '2016-04-04_rem.sh'
+% opt.myshfile = '2016-09-25_r1-1000.sh'
+% opt.myshfile = '2016-10-25.sh'
+% opt.myshfile = '2016-10-31.sh'
+% opt.myshfile = '2016-10-31.sh'
+% opt.myshfile = '2016-12-05.sh'
+% opt.myshfile = '2017-02-13.sh'
+% opt.myshfile = '2017-01-15.sh'
+% opt.myshfile = '2017-02-22.sh'
+% opt.myshfile = '2017-04-19.sh'
+% opt.myshfile = '2016-03-21.sh'
+% opt.myshfile = '2016-03-21.sh'
+% opt.myshfile = '2016-09-12.sh'
+% opt.myshfile = '2014-06-24.sh'
 
 brain = opt.myshfile(1:10);
 % check Tiling folder exists
 opt.inputfolder = fullfile(myfilefolder,sprintf('%s/Tiling',brain))
 if exist(opt.inputfolder,'dir')
-    
 else
-    opt.inputfolder = fullfile(myfilefolder,sprintf('%s/',brain))
+    opt.inputfolder = fullfile(myfilefolder,sprintf('%s/',brain));
 end
     
 opt.seqtemp = fullfile(opt.inputfolder,sprintf('filelist.txt'))
@@ -133,6 +136,7 @@ myfiles = textscan(fid,'%s');
 myfiles = myfiles{1};
 numfiles = size(myfiles,1);
 fclose(fid);
+
 %%
 if 0 % use array tasks
     %%
@@ -146,6 +150,7 @@ if 0 % use array tasks
         range(1),range(2),opt.inputfolder);
     fclose(fid);
     unix(sprintf('chmod g+x %s',fullfile(opt.inputfolder,'comp_task_list.sh')));
+    
     %%
     comp = 10%[1 5 10 20 40 80];
     delete_file = 1;
@@ -175,10 +180,11 @@ if 0 % use array tasks
         end
         fclose(fid);
         unix(sprintf('chmod g+x %s',myfile));
-        
     end
+    
     %%
 else
+    %%
     myshfile = opt.myshfile;
     % videofolder = '/tier2/mousebrainmicro/mousebrainmicro/cluster/compressionExperiment/out'
     comp = 10%[1 5 10 20 40 80];
@@ -198,15 +204,14 @@ else
         [videofolder,outname] = fileparts(tiffile);
         randString = s( ceil(rand(1,sLength)*numRands) );
         name = sprintf('c-%05d-%s',idx,randString);
-        args = sprintf('''/groups/mousebrainmicro/home/base/CODE/MATLAB/recontree/compiled/compiledfiles_conversion/compressbrain_cluster %d %s %s %s %d''',comp,tiffile,videofolder,outname,delete_file);
+        args = sprintf('''/groups/mousebrainmicro/home/base/CODE/MATLAB/recontree/compiled/compiledfiles_conversion2/compressbrain_cluster %d %s %s %s %d''',comp,tiffile,videofolder,outname,delete_file);
 %         mysub = sprintf('qsub -pe batch %d -l d_rt=%d -N %s -j y -o /dev/null -b y -cwd -V %s\n',numcores,howlong,name,args);
-        mysub = sprintf('bsub -n%d -We %d -J %s -o /dev/null %s\n',numcores,howlong/60,name,args);
+        mysub = sprintf('bsub -n%d -R"affinity[core(1)]" -We %d -J %s -o /dev/null %s\n',numcores,howlong/60,name,args);
         fwrite(fid,mysub);
     end
     unix(sprintf('chmod +x %s',myshfile));
 end
 end
-
 
 % %%
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5

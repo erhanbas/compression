@@ -21,7 +21,7 @@ function compressbrain_cluster(comp, tiffile, videofolder,outname,delete_file)
 % Copyright: HHMI 2016
 %%
 if nargin<2
-    myshfile = '2017-09-25.sh'
+    myshfile = '2018-05-23.sh'
     deployment(myshfile)
     return
 end

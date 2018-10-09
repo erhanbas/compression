@@ -13,5 +13,5 @@ routines used for (de)archiving tif files. converts tif to motion-jpeg-2000 (mj2
 
 ### Pipeline Usage:
 There is a sample pipe named: "Compression Example", same logic as other pipes. Compression arguments can be passed in "Tasks"
-![](compression/matlab/CompressionTask.png)
+![Adding new task](compression/matlab/CompressionTask.png)
 

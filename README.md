@@ -15,5 +15,5 @@ routines used for (de)archiving tif files. converts tif to motion-jpeg-2000 (mj2
 There is a sample pipe named: "Compression Example", same logic as other pipes. Compression arguments can be passed in "Tasks":
 
 <!-- ![](./matlab/CompressionTask.png) -->
-<img src="./matlab/CompressionTask.png" height="600" width="550" align="middle">
+<img src="./matlab/CompressionTask.png" align="middle" height="600" width="550">
 

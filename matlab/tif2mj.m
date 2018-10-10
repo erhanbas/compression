@@ -52,10 +52,10 @@ end
 
 
 varargout{1} = 0;
-comp = str2num(compression_lvl);
-delete_file = str2num(delete_file);
-maxThreads = str2num(maxThreads);
-LASTN = maxNumCompThreads(maxThreads); % sets the number of threads that will be used
+comp = str2double(compression_lvl);
+delete_file = str2double(delete_file);
+maxThreads = str2double(maxThreads);
+maxNumCompThreads(maxThreads); % sets the number of threads that will be used
 
 if ~exist(output_base,'dir');mkdir(output_base);end
 % check existing tif files
@@ -69,13 +69,13 @@ for i_tif = 1:length(my_tif_files)
     
     % reads tif file
     imgdata = deployedtiffread(input_tif_file);
-    v = VideoWriter(output_mj2_file,'Motion JPEG 2000');
+    v = VideoWriter(output_mj2_file,'Motion JPEG 2000'); %#ok<TNMLP>
     v.CompressionRatio = comp;
     v.MJ2BitDepth = 16;
     open(v)
     writeVideo(v,reshape(imgdata,[size(imgdata,1),size(imgdata,2),1,size(imgdata,3)]))
     close(v)
-    unix(sprintf('chmod g+rwx %s',output_mj2_file))
+    try unix(sprintf('chmod g+rwx %s',output_mj2_file));catch;end
 
     % delete raw file, -f forces to delete write protected files
     if delete_file; unix(sprintf('rm -f %s',input_tif_file)); end

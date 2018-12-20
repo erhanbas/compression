@@ -1,5 +1,5 @@
 # compression
-routines used for (de)archiving tif files. converts tif to motion-jpeg-2000 (mj2) with a given compression rate. production version is compression/matlab/tif2mj.m 
+Converts tif to motion-jpeg-2000 (mj2) with a given compression rate. production version is compression/matlab/tif2mj.m 
 
 ## Arguments: 
 * varargout = tif2mj(input_base,output_base,compression_lvl,delete_file,maxThreads)

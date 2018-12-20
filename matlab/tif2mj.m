@@ -26,7 +26,6 @@ if 0
     unix(sprintf('chmod g+rwx %s',compiledfunc))
 end
 %%
-
 if nargin<2
     myshfile = '2017-09-25.sh'
     deployment(myshfile)

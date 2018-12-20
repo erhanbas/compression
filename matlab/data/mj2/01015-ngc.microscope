@@ -1,0 +1,264 @@
+scanner3d {
+  scanner2d {
+    frequency_hz: 7920
+    nscans: 768
+    line_duty_cycle: 0.99
+    daq {
+      kind: NIDAQ
+      nidaq {
+        ao_samples_per_waveform: 16384
+        trigger: "APFI0"
+        ctr: "ctr0"
+        armstart: "PFI15"
+        name: "Dev2"
+        level_volts: 0.5
+        flyback_scans: 4
+        frame_trigger_out: "PFI1"
+      }
+      simulated {
+      }
+    }
+    digitizer {
+      kind: Alazar
+      niscope {
+      }
+      alazar {
+        system_id: 1
+        sample_rate: SAMPLE_RATE_125MSPS
+        channels {
+          board_id: 0
+          chan_id: CHANNEL_A
+          range: INPUT_RANGE_PM_1_V
+          enabled: true
+        }
+        channels {
+          board_id: 0
+          chan_id: CHANNEL_B
+          range: INPUT_RANGE_PM_1_V
+          enabled: true
+        }
+        aux_out_board_id: 1
+      }
+      simulated {
+      }
+    }
+    pockels {
+      kind: NIDAQ
+      laser: Chameleon
+      name: "Chameleon"
+      calibration {
+        calibrated: true
+        v_zero: 0
+        v_max: 0.75
+      }
+      nidaq {
+        v_lim_max: 2
+        v_lim_min: 0
+        v_open: 0.75
+        v_closed: 0
+        ao_channel: "ao2"
+        ai_channel: "ai16"
+      }
+      simulated {
+      }
+    }
+    pockels {
+      kind: NIDAQ
+      laser: Fianium
+      name: "Fianium (1064nm)"
+      calibration {
+        calibrated: true
+        v_zero: 0
+        v_max: 1.5
+      }
+      nidaq {
+        v_lim_max: 2
+        v_lim_min: 0
+        v_open: 0
+        v_closed: 0
+        ao_channel: "ao3"
+        ai_channel: ""
+      }
+      simulated {
+      }
+    }
+    shutter {
+      kind: NIDAQ
+      nidaq {
+        open: 1
+        closed: 0
+        do_channel: "/Dev2/port0/line8"
+      }
+      simulated {
+      }
+    }
+    linear_scan_mirror {
+      kind: NIDAQ
+      nidaq {
+        v_lim_max: 10
+        v_lim_min: -10
+        vpp: 16
+        ao_channel: "ao0"
+      }
+      simulated {
+      }
+    }
+  }
+  zpiezo {
+    kind: NIDAQ
+    nidaq {
+      um2v: 0.025
+      v_lim_max: 12
+      v_lim_min: -3
+      v_offset: 0
+      channel: "ao1"
+    }
+    simulated {
+    }
+    um_max: 250
+    um_min: 0
+    um_step: 1
+  }
+  zref_um: 0
+}
+stage {
+  kind: C843
+  c843 {
+    id: 1
+    axis {
+      id: 1
+      stage: "M-511.DD_NEW_X"
+    }
+    axis {
+      id: 2
+      stage: "M-511.DD_NEW_Y"
+    }
+    axis {
+      id: 3
+      stage: "M-405.CG_NEW_Z"
+    }
+  }
+  simulated {
+    axis {
+      min_mm: 0
+      max_mm: 100
+    }
+    axis {
+      min_mm: 0
+      max_mm: 100
+    }
+    axis {
+      min_mm: 0
+      max_mm: 12.5
+    }
+  }
+  default_velocity_mm_per_sec {
+    x: 4
+    y: 4
+    z: 0.4
+  }
+  last_target_mm {
+    x: 74.480766
+    y: 54.164703
+    z: 17.600346
+  }
+  tilemode: PixelAligned
+  tile_z_offset_mm: 0.20034505426883698
+}
+vibratome {
+  kind: Serial
+  serial {
+    port: "COM4"
+    amplitude: 255
+  }
+  simulated {
+  }
+  feed_axis: Y
+  feed_vel_mm_per_sec: 0.1
+  feed_mm: 19
+  geometry {
+    cut_pos_mm {
+      x: 58.368000030517578
+      y: 81.66400146484375
+    }
+    dz_mm: 0.95000457763671875
+  }
+  cut_thickness_um: 150
+}
+fov {
+  x_size_um: 386.67
+  y_size_um: 426.22
+  z_size_um: 250
+  x_overlap_um: 60
+  y_overlap_um: 25
+  z_overlap_um: 100
+  rotation_radians: 0
+}
+pipeline {
+  frame_average_count: 1
+  downsample_count: 4
+  invert_intensity: false
+}
+file_series {
+  root: "e:\\data"
+  date: "2014-11-25"
+  seriesno: 1015
+  pathsep: "\\"
+}
+file_prefix: "ngc"
+stack_extension: ".tif"
+config_extension: ".microscope"
+autotile {
+  z_um: 150
+  maxz_mm: 30
+  timeout_ms: 15000
+  ichan: 0
+  intensity_threshold: 13800
+  area_threshold: 0.1
+  search_radius: 2
+  use_adaptive_tiling: true
+  use_explore: true
+}
+surface_probe {
+  kind: NIDAQ
+  nidaq {
+    ai_channel: "/Dev2/ai0"
+    v_min: -10
+    v_max: 10
+  }
+}
+surface_scan {
+  filename: "surface_scan_10-14-13-11-THY_firstscan20X.csv"
+  settling_time_ms: 0
+}
+time_series {
+  interval_ms: 300000
+}
+surface_find {
+  backup_frac: 0.8
+  max_backup_um: 400
+  min_um: 0
+  max_um: 200
+  dz_um: 5
+  ichan: 0
+  intensity_threshold: 13400
+  area_threshold: 0.1
+  offset_um: 0
+}
+adaptive_tiling {
+  every: 10
+  mindist: 2
+}
+trip_detect {
+  threshold {
+    ichan: 0
+    intensity_threshold: 13400
+    area_threshold: 0.0001
+  }
+  threshold {
+    ichan: 1
+    intensity_threshold: 12650
+    area_threshold: 0.0001
+  }
+  frame_threshold: 250
+}
